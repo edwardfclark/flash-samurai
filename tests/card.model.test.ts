@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/ban-ts-comment */
 import { Card } from '../src/models/card';
 import { connect, clearDatabase, closeDatabase } from './db';
 
@@ -13,9 +14,14 @@ describe('Card', () => {
     answer: 'To get to the other side.',
     group: 'test',
   };
-  test('Model test', async () => {
+  it('creates a new card if given all valid, required arguments', async () => {
     const card = Card.build(cardArgs);
     await card.save();
     expect(card.isNew).toBe(false);
+  });
+  it('will not create a card if given invalid arguments', async () => {
+    // @ts-ignore
+    const card = Card.build({ thalidocracy: 'expressive' });
+    await expect(card.validate()).rejects.toThrow();
   });
 });
