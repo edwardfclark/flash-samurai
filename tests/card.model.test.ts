@@ -19,9 +19,9 @@ describe('Card', () => {
     await card.save();
     expect(card.isNew).toBe(false);
   });
-  it('will not create a card if given invalid arguments', async () => {
+  it('will not create a card if required arguments are omitted', async () => {
     // @ts-ignore
-    const card = Card.build({ thalidocracy: 'expressive' });
+    const card = Card.build({ question: cardArgs.question });
     await expect(card.validate()).rejects.toThrow();
   });
 });
