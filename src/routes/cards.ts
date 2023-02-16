@@ -31,7 +31,9 @@ router.put('/api/card/:id', async (req: Request, res: Response) => {
   const body = req.body;
 
   try {
-    const card = await Card.findOneAndUpdate({ _id: id }, body, { returnOriginal: false });
+    const card = await Card.findOneAndUpdate({ _id: id }, body, {
+      returnOriginal: false,
+    });
     return res.status(201).send(card);
   } catch (err) {
     return res.status(500).send(err);
