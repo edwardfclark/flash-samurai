@@ -1,11 +1,5 @@
-import express from 'express';
+import { app } from './app';
 import mongoose from 'mongoose';
-import { json } from 'body-parser';
-import { cardRouter } from './routes/cards';
-
-const app = express();
-app.use(json());
-app.use(cardRouter);
 
 mongoose.connect('mongodb://localhost:27017/flash-samurai', {}, () => {
   console.log('connected to database');
