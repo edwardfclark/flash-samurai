@@ -1,10 +1,10 @@
 import { app } from './app';
 import mongoose from 'mongoose';
 
-mongoose.connect('mongodb://localhost:27017/flash-samurai', {}, () => {
-  console.log('connected to database');
+mongoose.connect(process?.env?.MONGO_URI ?? '', {}, () => {
+  console.log(`Connected to database at: ${process.env.MONGO_URI}`);
 });
 
-app.listen(3000, () => {
-  console.log('server is listening on port 3000');
+app.listen(process.env.PORT, () => {
+  console.log(`Server listening on port: ${process.env.PORT}`);
 });

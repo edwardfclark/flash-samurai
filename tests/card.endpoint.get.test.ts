@@ -15,7 +15,7 @@ let card: Document;
 let application: Server;
 
 beforeAll(async () => {
-  application = await app.listen(3000, () => {});
+  application = await app.listen(process.env.PORT, () => {});
 
   await connect();
 });
@@ -35,7 +35,7 @@ afterAll(async () => {
 describe('/api/card/:id GET', () => {
   it('successfully returns a card', async () => {
     const { _id: id } = card;
-    const res = await request('http://localhost:3000').get(`/api/card/${id}`);
+    const res = await request(`http://localhost:${process.env.PORT}`).get(`/api/card/${id}`);
     const { body } = res;
 
     expect(body.question).toEqual(cardArgs.question);
