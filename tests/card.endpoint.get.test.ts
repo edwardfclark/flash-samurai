@@ -42,4 +42,10 @@ describe('/api/card/:id GET', () => {
     expect(body.answer).toEqual(cardArgs.answer);
     expect(body.group).toEqual(cardArgs.group);
   });
+
+  it('throws an error if the ID is invalid', async () => {
+    const res = await request(`http://localhost:${process.env.PORT}`).get(`/api/card/invalid-id`);
+
+    expect(res.status).toBe(500);
+  });
 });
