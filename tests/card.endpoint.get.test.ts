@@ -3,6 +3,7 @@ import { connect, clearDatabase, closeDatabase } from './db';
 import { Document } from 'mongoose';
 import { app } from '../src/app';
 import request from 'supertest';
+import { Server } from 'http';
 
 const cardArgs: ICard = {
   question: 'Why did the chicken cross the road?',
@@ -11,7 +12,7 @@ const cardArgs: ICard = {
 };
 
 let card: Document;
-let application: any;
+let application: Server;
 
 beforeAll(async () => {
   application = await app.listen(3000, () => {});
@@ -35,9 +36,10 @@ describe('/api/card/:id GET', () => {
   it('successfully returns a card', async () => {
     const { _id: id } = card;
     const res = await request('http://localhost:3000').get(`/api/card/${id}`);
-    Object.keys(cardArgs).forEach((key) => {
-      // @ts-ignore
-      expect(res.body[key]).toEqual(cardArgs[key]);
-    });
+    const { body } = res;
+
+    expect(body.question).toEqual(cardArgs.question);
+    expect(body.answer).toEqual(cardArgs.answer);
+    expect(body.group).toEqual(cardArgs.group);
   });
 });
