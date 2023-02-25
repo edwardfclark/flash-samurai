@@ -40,7 +40,7 @@ afterAll(async () => {
 });
 
 describe('/api/card/:id PUT', () => {
-  it('successully updates a card', async () => {
+  it('successfully updates a card', async () => {
     const { _id: id } = card;
     const res = await request(application)
       .put(`/api/card/${id}`)
