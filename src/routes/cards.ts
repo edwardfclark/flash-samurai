@@ -40,4 +40,15 @@ router.put('/api/card/:id', async (req: Request, res: Response) => {
   }
 });
 
+router.delete('/api/card/:id', async (req: Request, res: Response) => {
+  const { id } = req.params;
+
+  try {
+    const card = await Card.findOneAndDelete({ _id: id });
+    return res.status(201).send(card);
+  } catch (err) {
+    return res.status(500).send(err);
+  }
+});
+
 export { router as cardRouter };
