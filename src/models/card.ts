@@ -3,13 +3,13 @@ import mongoose from 'mongoose';
 interface ICard {
   question: string;
   answer: string;
-  group: string;
+  group: mongoose.ObjectId;
 }
 
 interface CardDoc extends mongoose.Document {
   question: string;
   answer: string;
-  group: string;
+  group: mongoose.ObjectId;
 }
 
 interface cardModelInterface extends mongoose.Model<CardDoc> {

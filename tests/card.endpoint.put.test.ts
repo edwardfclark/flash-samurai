@@ -1,17 +1,22 @@
 import { Card, ICard } from '../src/models/card';
+import { Group, IGroup } from '../src/models/group';
 import { connect, clearDatabase, closeDatabase } from './db';
 import { Document } from 'mongoose';
 import { app } from '../src/app';
 import request from 'supertest';
 import { Server } from 'http';
 
-const cardArgs: ICard = {
+const groupArgs: IGroup = {
+  name: 'test',
+};
+
+const cardArgs: Omit<ICard, 'group'> = {
   question: 'Why did the chicken cross the road?',
   answer: 'To get to the other side!',
-  group: 'test',
 };
 
 let card: Document;
+let group: Document;
 let application: Server;
 
 beforeAll(async () => {
@@ -21,7 +26,9 @@ beforeAll(async () => {
 });
 
 beforeEach(async () => {
-  card = Card.build(cardArgs);
+  group = Group.build(groupArgs);
+  await group.save();
+  card = Card.build({ ...cardArgs, group: group._id });
   await card.save();
 });
 
