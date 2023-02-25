@@ -11,7 +11,6 @@ const cardArgs: ICard = {
   group: 'test',
 };
 
-let card: Document;
 let application: Server;
 
 beforeAll(async () => {
