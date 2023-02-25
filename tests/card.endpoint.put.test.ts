@@ -15,7 +15,7 @@ let card: Document;
 let application: Server;
 
 beforeAll(async () => {
-  application = await app.listen(process.env.PORT, () => {});
+  application = await app.listen(0, () => {});
 
   await connect();
 });
@@ -35,7 +35,7 @@ afterAll(async () => {
 describe('/api/card/:id PUT', () => {
   it('successully updates a card', async () => {
     const { _id: id } = card;
-    const res = await request(`http://localhost:${process.env.PORT}`)
+    const res = await request(application)
       .put(`/api/card/${id}`)
       .send({
         ...cardArgs,
@@ -50,7 +50,7 @@ describe('/api/card/:id PUT', () => {
   });
   it('returns the newly updated document', async () => {
     const { _id: id } = card;
-    const res = await request(`http://localhost:${process.env.PORT}`)
+    const res = await request(application)
       .put(`/api/card/${id}`)
       .send({
         ...cardArgs,
@@ -62,7 +62,7 @@ describe('/api/card/:id PUT', () => {
     expect(body?.answer).toEqual('Because it was stapled to the chicken!');
   });
   it('throws an error if given a bad id', async () => {
-    const res = await request(`http://localhost:${process.env.PORT}`)
+    const res = await request(application)
       .put(`/api/card/ayyy_lmao`)
       .send({
         ...cardArgs,

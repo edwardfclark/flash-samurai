@@ -14,7 +14,7 @@ const cardArgs: ICard = {
 let application: Server;
 
 beforeAll(async () => {
-  application = await app.listen(process.env.PORT, () => {});
+  application = await app.listen(0, () => {});
 
   await connect();
 });
@@ -28,7 +28,7 @@ afterAll(async () => {
 
 describe('/api/card POST', () => {
   it('successfully creates a new card', async () => {
-    const res = await request(`http://localhost:${process.env.PORT}`).post('/api/card').send(cardArgs);
+    const res = await request(application).post('/api/card').send(cardArgs);
     const { body } = res;
 
     const id = body?._id;
@@ -39,7 +39,7 @@ describe('/api/card POST', () => {
     expect(card?.group).toEqual(cardArgs.group);
   });
   it('returns the newly created document', async () => {
-    const res = await request(`http://localhost:${process.env.PORT}`).post('/api/card').send(cardArgs);
+    const res = await request(application).post('/api/card').send(cardArgs);
     const { body } = res;
 
     expect(body.question).toEqual(cardArgs.question);
