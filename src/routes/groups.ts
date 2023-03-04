@@ -45,7 +45,12 @@ router.delete('/api/group/:id', async (req: Request, res: Response) => {
   const { id } = req.params;
 
   try {
+    if (!id) {
+      throw new Error('No ID, could not delete the group!');
+    }
     const group = await Group.findOneAndDelete({ _id: id });
+    await Card.deleteMany({ group: id });
+
     return res.status(201).send(group);
   } catch (err) {
     return res.status(500).send(err);
