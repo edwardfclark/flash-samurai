@@ -58,4 +58,12 @@ describe('/api/card POST', () => {
     expect(body.question).toEqual(cardArgs.question);
     expect(body.answer).toEqual(cardArgs.answer);
   });
+  it('can take an optional "reference" key', async () => {
+    const res = await request(application)
+      .post('/api/card')
+      .send({ ...cardArgs, group: group?._id, reference: 'interesting reference' });
+    const { body } = res;
+
+    expect(body.reference).toEqual('interesting reference');
+  });
 });

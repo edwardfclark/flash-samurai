@@ -4,10 +4,8 @@ import { Card } from '../models/card';
 const router = express.Router();
 
 router.post('/api/card', async (req: Request, res: Response) => {
-  const { question, answer, group } = req.body;
-
   try {
-    const card = Card.build({ question, answer, group });
+    const card = Card.build(req.body);
     await card.save();
     return res.status(201).send(card);
   } catch (err) {

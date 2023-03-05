@@ -4,12 +4,14 @@ interface ICard {
   question: string;
   answer: string;
   group: mongoose.ObjectId;
+  reference?: string;
 }
 
 interface CardDoc extends mongoose.Document {
   question: string;
   answer: string;
   group: mongoose.ObjectId;
+  reference?: string;
 }
 
 interface cardModelInterface extends mongoose.Model<CardDoc> {
@@ -28,6 +30,10 @@ const cardSchema = new mongoose.Schema({
   group: {
     type: String,
     required: true,
+  },
+  reference: {
+    type: String,
+    required: false,
   },
 });
 
