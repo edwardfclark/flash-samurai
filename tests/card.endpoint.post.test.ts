@@ -66,4 +66,12 @@ describe('/api/card POST', () => {
 
     expect(body.reference).toEqual('interesting reference');
   });
+  it('does not create records with keys that are not in the model', async () => {
+    const res = await request(application)
+      .post('/api/card')
+      .send({ ...cardArgs, group: group?._id, factoid: 'interesting factoid' });
+    const { body } = res;
+
+    expect(body.factoid).toBeUndefined();
+  });
 });
