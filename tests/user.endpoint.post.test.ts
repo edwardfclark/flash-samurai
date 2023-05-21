@@ -60,7 +60,7 @@ describe('/api/login POST', () => {
     const res = await request(application).post('/api/login').send(userArgs);
     const { body, status } = res;
 
-    expect(status).toEqual(201);
+    expect(status).toEqual(200);
     expect(body?.token).toBeDefined();
   });
   it('returns an error if the username is incorrect', async () => {

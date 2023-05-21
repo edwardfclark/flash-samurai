@@ -44,7 +44,7 @@ describe('/api/card/:id DELETE', () => {
     const res = await request(application).delete(`/api/card/${id}`);
     const { status } = res;
 
-    expect(status).toBe(201);
+    expect(status).toBe(200);
   });
   it('returns the deleted record when the endpoint is called', async () => {
     const { _id: id } = card;

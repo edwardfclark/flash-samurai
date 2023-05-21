@@ -42,7 +42,7 @@ router.post('/api/login', async (req: Request, res: Response) => {
       if (result) {
         // Sign token and send it in response
         const token = jwt.sign({ username }, SECRET);
-        res.status(201).send({ token });
+        res.status(200).send({ token });
       } else {
         res.status(400).send({ error: 'Invalid password' });
       }

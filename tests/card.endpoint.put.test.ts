@@ -50,7 +50,7 @@ describe('/api/card/:id PUT', () => {
         answer: 'Because it was stapled to the chicken!',
       });
     const { status } = res;
-    expect(status).toBe(201);
+    expect(status).toBe(200);
     const storedCard = await Card.findById(id);
     expect(storedCard?.question).toEqual('Why did the duck cross the road?');
     expect(storedCard?.answer).toEqual('Because it was stapled to the chicken!');
