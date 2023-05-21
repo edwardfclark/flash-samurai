@@ -15,6 +15,7 @@ router.post('/api/signup', async (req: Request, res: Response) => {
 
     // Create a new user
     const user = await User.build({ username, password });
+    await user.save();
 
     return res.status(201).send(user);
   } catch (err) {

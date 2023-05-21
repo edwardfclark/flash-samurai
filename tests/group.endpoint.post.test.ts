@@ -1,7 +1,5 @@
-import { Card, ICard } from '../src/models/card';
 import { Group, IGroup } from '../src/models/group';
 import { connect, clearDatabase, closeDatabase } from './db';
-import { Document } from 'mongoose';
 import { app } from '../src/app';
 import request from 'supertest';
 import { Server } from 'http';
