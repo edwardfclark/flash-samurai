@@ -22,7 +22,6 @@
   "author": "edwardfclark <edward@streamelements.com>",
   "license": "ISC",
   "devDependencies": {
-    "@types/bcrypt": "^5.0.0",
     "@types/cors": "^2.8.13",
     "@types/dotenv": "^8.2.0",
     "@types/express": "^4.17.17",
@@ -52,6 +51,7 @@
     "typescript": "*"
   },
   "dependencies": {
+    "@types/bcryptjs": "^2.4.2",
     "bcryptjs": "^2.4.3",
     "body-parser": "^1.20.1",
     "cors": "^2.8.5",
