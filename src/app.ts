@@ -7,6 +7,8 @@ import dotenv from 'dotenv';
 dotenv.config();
 
 const app = express();
+
+// Global middleware
 app.use(json());
 app.use(cardRouter);
 app.use(groupRouter);
