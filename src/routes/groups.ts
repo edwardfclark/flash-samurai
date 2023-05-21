@@ -1,10 +1,11 @@
 import express, { type Request, type Response } from 'express';
 import { Group, IGroup } from '../models/group';
 import { Card, ICard } from '../models/card';
+import { isAuthenticated } from '../middleware/auth';
 
 const router = express.Router();
 
-router.post('/api/group', async (req: Request, res: Response) => {
+router.post('/api/group', isAuthenticated, async (req: Request, res: Response) => {
   const { name, description } = req.body;
 
   try {
@@ -16,7 +17,7 @@ router.post('/api/group', async (req: Request, res: Response) => {
   }
 });
 
-router.get('/api/group/:id', async (req: Request, res: Response) => {
+router.get('/api/group/:id', isAuthenticated, async (req: Request, res: Response) => {
   const { id } = req.params;
 
   try {
@@ -27,7 +28,7 @@ router.get('/api/group/:id', async (req: Request, res: Response) => {
   }
 });
 
-router.put('/api/group/:id', async (req: Request, res: Response) => {
+router.put('/api/group/:id', isAuthenticated, async (req: Request, res: Response) => {
   const { id } = req.params;
   const body = req.body;
 
@@ -41,7 +42,7 @@ router.put('/api/group/:id', async (req: Request, res: Response) => {
   }
 });
 
-router.delete('/api/group/:id', async (req: Request, res: Response) => {
+router.delete('/api/group/:id', isAuthenticated, async (req: Request, res: Response) => {
   const { id } = req.params;
 
   try {
@@ -59,6 +60,7 @@ router.delete('/api/group/:id', async (req: Request, res: Response) => {
 
 router.get(
   '/api/group/:id/cards',
+  isAuthenticated,
   async (
     req: Request<
       { id: string },
@@ -90,6 +92,7 @@ router.get(
 
 router.get(
   '/api/group',
+  isAuthenticated,
   async (
     req: Request<
       unknown,

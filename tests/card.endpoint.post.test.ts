@@ -1,10 +1,16 @@
 import { Card, ICard } from '../src/models/card';
 import { Group, IGroup } from '../src/models/group';
+import { IUser } from '../src/models/user';
 import { connect, clearDatabase, closeDatabase } from './db';
 import { Document } from 'mongoose';
 import { app } from '../src/app';
 import request from 'supertest';
 import { Server } from 'http';
+
+const userArgs: IUser = {
+  username: 'testuser',
+  password: 'testpassword',
+};
 
 const groupArgs: IGroup = {
   name: 'test',
@@ -17,6 +23,7 @@ const cardArgs: Omit<ICard, 'group'> = {
 
 let application: Server;
 let group: Document;
+let authorization: string;
 
 beforeAll(async () => {
   application = await app.listen(0, () => {});
@@ -25,6 +32,11 @@ beforeAll(async () => {
 });
 
 beforeEach(async () => {
+  // Login
+  await request(application).post('/api/signup').send(userArgs);
+  const res = await request(application).post('/api/login').send(userArgs);
+  authorization = `Bearer ${res.body.token}`;
+
   group = Group.build(groupArgs);
   await group.save();
 });
@@ -40,6 +52,7 @@ describe('/api/card POST', () => {
   it('successfully creates a new card', async () => {
     const res = await request(application)
       .post('/api/card')
+      .set('authorization', authorization)
       .send({ ...cardArgs, group: group?._id });
     const { body } = res;
 
@@ -52,6 +65,7 @@ describe('/api/card POST', () => {
   it('returns the newly created document', async () => {
     const res = await request(application)
       .post('/api/card')
+      .set('authorization', authorization)
       .send({ ...cardArgs, group: group?._id });
     const { body } = res;
 
@@ -61,6 +75,7 @@ describe('/api/card POST', () => {
   it('can take an optional "reference" key', async () => {
     const res = await request(application)
       .post('/api/card')
+      .set('authorization', authorization)
       .send({ ...cardArgs, group: group?._id, reference: 'interesting reference' });
     const { body } = res;
 
@@ -69,6 +84,7 @@ describe('/api/card POST', () => {
   it('does not create records with keys that are not in the model', async () => {
     const res = await request(application)
       .post('/api/card')
+      .set('authorization', authorization)
       .send({ ...cardArgs, group: group?._id, factoid: 'interesting factoid' });
     const { body } = res;
 

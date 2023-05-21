@@ -1,9 +1,10 @@
 import express, { type Request, type Response } from 'express';
 import { Card } from '../models/card';
+import { isAuthenticated } from '../middleware/auth';
 
 const router = express.Router();
 
-router.post('/api/card', async (req: Request, res: Response) => {
+router.post('/api/card', isAuthenticated, async (req: Request, res: Response) => {
   try {
     const card = Card.build(req.body);
     await card.save();
@@ -13,18 +14,18 @@ router.post('/api/card', async (req: Request, res: Response) => {
   }
 });
 
-router.get('/api/card/:id', async (req: Request, res: Response) => {
+router.get('/api/card/:id', isAuthenticated, async (req: Request, res: Response) => {
   const { id } = req.params;
 
   try {
     const card = await Card.findById(id);
-    return res.status(201).send(card);
+    return res.status(200).send(card);
   } catch (err) {
     return res.status(500).send(err);
   }
 });
 
-router.put('/api/card/:id', async (req: Request, res: Response) => {
+router.put('/api/card/:id', isAuthenticated, async (req: Request, res: Response) => {
   const { id } = req.params;
   const body = req.body;
 
@@ -32,18 +33,18 @@ router.put('/api/card/:id', async (req: Request, res: Response) => {
     const card = await Card.findOneAndUpdate({ _id: id }, body, {
       returnOriginal: false,
     });
-    return res.status(201).send(card);
+    return res.status(200).send(card);
   } catch (err) {
     return res.status(500).send(err);
   }
 });
 
-router.delete('/api/card/:id', async (req: Request, res: Response) => {
+router.delete('/api/card/:id', isAuthenticated, async (req: Request, res: Response) => {
   const { id } = req.params;
 
   try {
     const card = await Card.findOneAndDelete({ _id: id });
-    return res.status(201).send(card);
+    return res.status(200).send(card);
   } catch (err) {
     return res.status(500).send(err);
   }
