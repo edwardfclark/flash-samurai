@@ -42,6 +42,15 @@ describe('/api/signup POST', () => {
 
     expect(body?.username).toEqual(userArgs.username);
   });
+  it('returns an error if the user already exists', async () => {
+    await request(application).post('/api/signup').send(userArgs);
+    const res = await request(application).post('/api/signup').send(userArgs);
+    const { body, status } = res;
+
+    expect(status).toEqual(400);
+    expect(body?.error).toBeDefined();
+    expect(body?.error).toEqual('User already exists');
+  });
 });
 
 describe('/api/login POST', () => {

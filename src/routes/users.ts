@@ -9,6 +9,13 @@ const { SECRET = 'secret' } = process.env;
 
 router.post('/api/signup', async (req: Request, res: Response) => {
   const { username, password: rawPass } = req.body;
+
+  // If the user already exists, early return with an error
+  const user = await User.findOne({ username });
+  if (!!user) {
+    return res.status(400).send({ error: 'User already exists' });
+  }
+
   try {
     // Hash the password
     const password = await bcrypt.hash(rawPass, 10);
