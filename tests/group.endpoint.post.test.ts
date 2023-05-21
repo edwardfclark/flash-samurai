@@ -1,8 +1,14 @@
 import { Group, IGroup } from '../src/models/group';
+import { IUser } from '../src/models/user';
 import { connect, clearDatabase, closeDatabase } from './db';
 import { app } from '../src/app';
 import request from 'supertest';
 import { Server } from 'http';
+
+const userArgs: IUser = {
+  username: 'testuser',
+  password: 'testpassword',
+};
 
 const groupArgs: IGroup = {
   name: 'Test',
@@ -10,6 +16,7 @@ const groupArgs: IGroup = {
 };
 
 let application: Server;
+let authorization: string;
 
 beforeAll(async () => {
   application = await app.listen(0, () => {});
@@ -24,9 +31,16 @@ afterAll(async () => {
   await application.close();
 });
 
+beforeEach(async () => {
+  // Login
+  await request(application).post('/api/signup').send(userArgs);
+  const res = await request(application).post('/api/login').send(userArgs);
+  authorization = `Bearer ${res.body.token}`;
+});
+
 describe('/api/group POST', () => {
   it('successfully creates a new group', async () => {
-    const res = await request(application).post('/api/group').send(groupArgs);
+    const res = await request(application).post('/api/group').set('authorization', authorization).send(groupArgs);
     const { body } = res;
 
     const id = body?._id;
@@ -36,7 +50,7 @@ describe('/api/group POST', () => {
     expect(group?.description).toEqual(groupArgs.description);
   });
   it('returns the newly created document', async () => {
-    const res = await request(application).post('/api/group').send(groupArgs);
+    const res = await request(application).post('/api/group').set('authorization', authorization).send(groupArgs);
     const { body } = res;
 
     expect(body?.name).toEqual(groupArgs.name);

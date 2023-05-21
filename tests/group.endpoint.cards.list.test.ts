@@ -1,11 +1,16 @@
 import { Group, IGroup } from '../src/models/group';
 import { Card, ICard } from '../src/models/card';
-
+import { IUser } from '../src/models/user';
 import { connect, clearDatabase, closeDatabase } from './db';
 import { Document } from 'mongoose';
 import { app } from '../src/app';
 import request from 'supertest';
 import { Server } from 'http';
+
+const userArgs: IUser = {
+  username: 'testuser',
+  password: 'testpassword',
+};
 
 const groupArgs: IGroup = {
   name: 'Test',
@@ -14,6 +19,8 @@ const groupArgs: IGroup = {
 
 let group: Document;
 let application: Server;
+let authorization: string;
+
 const wrongID = 'do_not_fetch';
 
 beforeAll(async () => {
@@ -23,6 +30,11 @@ beforeAll(async () => {
 });
 
 beforeEach(async () => {
+  // Login
+  await request(application).post('/api/signup').send(userArgs);
+  const res = await request(application).post('/api/login').send(userArgs);
+  authorization = `Bearer ${res.body.token}`;
+
   group = Group.build(groupArgs);
   await group.save();
 
@@ -60,7 +72,7 @@ afterAll(async () => {
 describe('/api/group/:id/cards GET', () => {
   it('fetches multiple cards', async () => {
     const { _id: id } = group;
-    const res = await request(application).get(`/api/group/${id}/cards`);
+    const res = await request(application).get(`/api/group/${id}/cards`).set('authorization', authorization);
     const { body } = res;
     const { data } = body;
 
@@ -68,7 +80,7 @@ describe('/api/group/:id/cards GET', () => {
   });
   it('only includes cards with the correct group', async () => {
     const { _id: id } = group;
-    const res = await request(application).get(`/api/group/${id}/cards`);
+    const res = await request(application).get(`/api/group/${id}/cards`).set('authorization', authorization);
     const { body } = res;
     const { data, total } = body;
 
@@ -77,7 +89,7 @@ describe('/api/group/:id/cards GET', () => {
   });
   it('has a default value of 10 for limit, and a default of 1 for page', async () => {
     const { _id: id } = group;
-    const res = await request(application).get(`/api/group/${id}/cards`);
+    const res = await request(application).get(`/api/group/${id}/cards`).set('authorization', authorization);
     const { body } = res;
     const { limit, page } = body;
 
@@ -86,7 +98,7 @@ describe('/api/group/:id/cards GET', () => {
   });
   it('allows you to request a higher limit', async () => {
     const { _id: id } = group;
-    const res = await request(application).get(`/api/group/${id}/cards?limit=100`);
+    const res = await request(application).get(`/api/group/${id}/cards?limit=100`).set('authorization', authorization);
     const { body } = res;
     const { data, limit } = body;
 
@@ -95,7 +107,7 @@ describe('/api/group/:id/cards GET', () => {
   });
   it('allows you to request a higher page', async () => {
     const { _id: id } = group;
-    const res = await request(application).get(`/api/group/${id}/cards?page=2`);
+    const res = await request(application).get(`/api/group/${id}/cards?page=2`).set('authorization', authorization);
     const { body } = res;
     const { data, page } = body;
 
