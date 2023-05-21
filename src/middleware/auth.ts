@@ -11,8 +11,6 @@ export async function isAuthenticated(req: Request, res: Response, next: NextFun
       if (token) {
         const payload = await jwt.verify(token, SECRET);
         if (payload) {
-          // @ts-ignore - TODO: fix this
-          req.user = payload;
           next();
         } else {
           return res.status(400).send({ error: 'Token verification failed' });
