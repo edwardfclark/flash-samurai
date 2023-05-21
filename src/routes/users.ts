@@ -45,3 +45,5 @@ router.post('/api/login', async (req: Request, res: Response) => {
     return res.status(500).send(err);
   }
 });
+
+export { router as userRouter };
