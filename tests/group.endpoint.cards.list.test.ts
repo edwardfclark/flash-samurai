@@ -42,17 +42,17 @@ beforeEach(async () => {
     {
       question: 'question1',
       answer: 'answer1',
-      group: group._id,
+      groupId: group._id,
     },
     {
       question: 'question2',
       answer: 'answer2',
-      group: group._id,
+      groupId: group._id,
     },
     {
       question: 'question3',
       answer: 'answer3',
-      group: wrongID,
+      groupId: wrongID,
     },
   ];
 

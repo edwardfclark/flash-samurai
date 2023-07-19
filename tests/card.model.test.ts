@@ -20,7 +20,7 @@ describe('Card', () => {
   it('creates a new card if given all valid, required arguments', async () => {
     const group = Group.build(groupArgs);
     await group.save();
-    const card = Card.build({ ...cardArgs, group: group?._id });
+    const card = Card.build({ ...cardArgs, groupId: group?._id });
     await card.save();
     expect(card.isNew).toBe(false);
   });

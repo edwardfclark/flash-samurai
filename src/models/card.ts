@@ -3,14 +3,14 @@ import mongoose from 'mongoose';
 interface ICard {
   question: string;
   answer: string;
-  group: mongoose.ObjectId;
+  groupId: mongoose.ObjectId;
   reference?: string;
 }
 
 interface CardDoc extends mongoose.Document {
   question: string;
   answer: string;
-  group: mongoose.ObjectId;
+  groupId: mongoose.ObjectId;
   reference?: string;
 }
 
@@ -27,7 +27,7 @@ const cardSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
-  group: {
+  groupId: {
     type: String,
     required: true,
   },

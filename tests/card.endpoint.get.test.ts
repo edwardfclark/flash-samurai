@@ -16,7 +16,7 @@ const groupArgs: IGroup = {
   name: 'test',
 };
 
-const cardArgs: Omit<ICard, 'group'> = {
+const cardArgs: Omit<ICard, 'groupId'> = {
   question: 'Why did the chicken cross the road?',
   answer: 'To get to the other side!',
 };
@@ -40,7 +40,7 @@ beforeEach(async () => {
 
   group = Group.build(groupArgs);
   await group.save();
-  card = Card.build({ ...cardArgs, group: group._id });
+  card = Card.build({ ...cardArgs, groupId: group._id });
   await card.save();
 });
 

@@ -16,7 +16,7 @@ const groupArgs: IGroup = {
   name: 'test',
 };
 
-const cardArgs: Omit<ICard, 'group'> = {
+const cardArgs: Omit<ICard, 'groupId'> = {
   question: 'Why did the chicken cross the road?',
   answer: 'To get to the other side!',
 };
@@ -53,7 +53,7 @@ describe('/api/card POST', () => {
     const res = await request(application)
       .post('/api/card')
       .set('authorization', authorization)
-      .send({ ...cardArgs, group: group?._id });
+      .send({ ...cardArgs, groupId: group?._id });
     const { body } = res;
 
     const id = body?._id;
@@ -66,7 +66,7 @@ describe('/api/card POST', () => {
     const res = await request(application)
       .post('/api/card')
       .set('authorization', authorization)
-      .send({ ...cardArgs, group: group?._id });
+      .send({ ...cardArgs, groupId: group?._id });
     const { body } = res;
 
     expect(body.question).toEqual(cardArgs.question);
@@ -76,7 +76,7 @@ describe('/api/card POST', () => {
     const res = await request(application)
       .post('/api/card')
       .set('authorization', authorization)
-      .send({ ...cardArgs, group: group?._id, reference: 'interesting reference' });
+      .send({ ...cardArgs, groupId: group?._id, reference: 'interesting reference' });
     const { body } = res;
 
     expect(body.reference).toEqual('interesting reference');

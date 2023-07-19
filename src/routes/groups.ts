@@ -76,12 +76,12 @@ router.get(
     const parsedPage = parseInt(page ?? 1, 10);
 
     try {
-      const cards = await Card.find({ group: id })
+      const cards = await Card.find({ groupId: id })
         .limit(parsedLimit * 1)
         .skip((parsedPage - 1) * parsedLimit)
         .exec();
 
-      const total = await Card.countDocuments({ group: id });
+      const total = await Card.countDocuments({ groupId: id });
 
       return res.status(201).send({ data: cards, page: parsedPage, limit: parsedLimit, total });
     } catch (err) {
