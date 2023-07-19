@@ -56,4 +56,11 @@ describe('/api/group POST', () => {
     expect(body?.name).toEqual(groupArgs.name);
     expect(body?.description).toEqual(groupArgs.description);
   });
+  it('will not create a group with the same name', async () => {
+    await request(application).post('/api/group').set('authorization', authorization).send(groupArgs);
+    const res = await request(application).post('/api/group').set('authorization', authorization).send(groupArgs);
+    const { status } = res;
+
+    expect(status).toEqual(500);
+  });
 });
