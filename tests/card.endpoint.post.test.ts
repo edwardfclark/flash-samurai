@@ -85,7 +85,7 @@ describe('/api/card POST', () => {
     const res = await request(application)
       .post('/api/card')
       .set('authorization', authorization)
-      .send({ ...cardArgs, group: group?._id, factoid: 'interesting factoid' });
+      .send({ ...cardArgs, groupId: group?._id, factoid: 'interesting factoid' });
     const { body } = res;
 
     expect(body.factoid).toBeUndefined();
