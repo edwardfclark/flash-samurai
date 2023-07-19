@@ -13,8 +13,6 @@ router.post('/api/group', isAuthenticated, async (req: Request, res: Response) =
     await group.save();
     return res.status(201).send(group);
   } catch (err) {
-    console.log(err);
-
     return res.status(500).send(err);
   }
 });
