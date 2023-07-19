@@ -28,7 +28,7 @@ let application: Server;
 let authorization: string;
 
 beforeAll(async () => {
-  application = await app.listen(0, () => {});
+  application = app.listen(0);
 
   await connect();
 });

@@ -24,7 +24,7 @@ let authorization: string;
 const wrongID = 'do_not_fetch';
 
 beforeAll(async () => {
-  application = await app.listen(0, () => {});
+  application = app.listen(0);
 
   await connect();
 });
