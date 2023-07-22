@@ -82,6 +82,34 @@ describe('/api/tag POST', () => {
 
     expect(body.foo).toBeUndefined();
   });
-  //   it('does not create tags for groups that do not exist', async () => {});
-  //   it('does not create duplicate tags', async () => {});
+  it('does not create tags for groups that do not exist', async () => {
+    const res = await request(application)
+      .post('/api/tag')
+      .set('authorization', authorization)
+      .send({ ...tagArgs, groupId: 'bogus group' });
+    const { body, status } = res;
+
+    const id = body?._id;
+    const tag = await Tag.findById(id);
+
+    expect(status).toEqual(500);
+    expect(tag).toBeNull();
+  });
+  it('does not create duplicate tags', async () => {
+    await request(application)
+      .post('/api/tag')
+      .set('authorization', authorization)
+      .send({ ...tagArgs, groupId: group?._id });
+
+    const res = await request(application)
+      .post('/api/tag')
+      .set('authorization', authorization)
+      .send({ ...tagArgs, groupId: group?._id });
+
+    const { status, body } = res;
+
+    expect(status).toEqual(500);
+    expect(body.name).toBeUndefined();
+    expect(body.description).toBeUndefined();
+  });
 });
