@@ -2,7 +2,7 @@ import express, { type Request, type Response } from 'express';
 import { Card } from '../models/card';
 import { Group } from '../models/group';
 import { isAuthenticated } from '../middleware/auth';
-import { removeDuplicatesFromArray } from '../utils/removeDuplicatesFromArray';
+import { removeDuplicatesByKey } from '../utils/removeDuplicatesByKey';
 
 const router = express.Router();
 
@@ -13,7 +13,7 @@ router.post('/api/card', isAuthenticated, async (req: Request, res: Response) =>
 
     // Prevent duplicate tags
     const tags = req.body.tags || [];
-    const uniqueTags = removeDuplicatesFromArray(tags, 'name');
+    const uniqueTags = removeDuplicatesByKey(tags, 'name');
 
     const card = Card.build({ ...req.body, tags: uniqueTags });
     await card.save();
