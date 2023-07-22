@@ -90,4 +90,18 @@ describe('/api/card POST', () => {
 
     expect(body.factoid).toBeUndefined();
   });
+  it('does not create cards for groups that do not exist', async () => {
+    const res = await request(application)
+      .post('/api/card')
+      .set('authorization', authorization)
+      .send({ ...cardArgs, groupId: 'bogus group' });
+
+    const { body, status } = res;
+
+    const id = body?._id;
+    const card = await Card.findById(id);
+
+    expect(status).toEqual(500);
+    expect(card).toBeNull();
+  });
 });
