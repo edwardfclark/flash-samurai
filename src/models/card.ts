@@ -5,6 +5,10 @@ interface ICard {
   answer: string;
   groupId: mongoose.ObjectId;
   reference?: string;
+  tags?: {
+    name: string;
+    description: string;
+  }[];
 }
 
 interface CardDoc extends mongoose.Document {
@@ -12,6 +16,10 @@ interface CardDoc extends mongoose.Document {
   answer: string;
   groupId: mongoose.ObjectId;
   reference?: string;
+  tags?: {
+    name: string;
+    description: string;
+  }[];
 }
 
 interface cardModelInterface extends mongoose.Model<CardDoc> {
@@ -35,6 +43,7 @@ const cardSchema = new mongoose.Schema({
     type: String,
     required: false,
   },
+  tags: [{ name: String, description: String }],
 });
 
 cardSchema.statics.build = (card: ICard) => {

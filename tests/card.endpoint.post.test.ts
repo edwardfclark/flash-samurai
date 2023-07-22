@@ -1,6 +1,7 @@
 import { Card, ICard } from '../src/models/card';
 import { Group, IGroup } from '../src/models/group';
 import { IUser } from '../src/models/user';
+import { Tag, ITag } from '../src/models/tag';
 import { connect, clearDatabase, closeDatabase } from './db';
 import { Document } from 'mongoose';
 import { app } from '../src/app';
@@ -21,8 +22,14 @@ const cardArgs: Omit<ICard, 'groupId'> = {
   answer: 'To get to the other side!',
 };
 
+const tagArgs: Omit<ITag, 'groupId'> = {
+  name: 'Test Tag',
+  description: 'This is a test tag',
+};
+
 let application: Server;
 let group: Document;
+let tag: Document;
 let authorization: string;
 
 beforeAll(async () => {
@@ -39,6 +46,8 @@ beforeEach(async () => {
 
   group = Group.build(groupArgs);
   await group.save();
+  tag = Tag.build({ ...tagArgs, groupId: group._id });
+  await tag.save();
 });
 
 afterEach(async () => await clearDatabase());
@@ -103,5 +112,34 @@ describe('/api/card POST', () => {
 
     expect(status).toEqual(500);
     expect(card).toBeNull();
+  });
+  it('allows optional tags to be added to the card', async () => {
+    const res = await request(application)
+      .post('/api/card')
+      .set('authorization', authorization)
+      .send({ ...cardArgs, groupId: group?._id, tags: [tag] });
+    const { body } = res;
+
+    const id = body?._id;
+    const card = await Card.findById(id);
+
+    expect(card?.tags?.[0]?.name).toEqual(tagArgs?.name);
+    expect(card?.tags?.[0]?.description).toEqual(tagArgs?.description);
+  });
+  it('does not store duplicate tags', async () => {
+    const res = await request(application)
+      .post('/api/card')
+      .set('authorization', authorization)
+      .send({
+        ...cardArgs,
+        groupId: group?._id,
+        tags: [tag, tag, tag, tag, { name: 'another test tag', description: 'test description' }],
+      });
+    const { body } = res;
+
+    const id = body?._id;
+    const card = await Card.findById(id);
+
+    expect(card?.tags?.length).toEqual(2);
   });
 });

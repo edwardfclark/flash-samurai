@@ -2,6 +2,7 @@ import express, { type Request, type Response } from 'express';
 import { Card } from '../models/card';
 import { Group } from '../models/group';
 import { isAuthenticated } from '../middleware/auth';
+import { removeDuplicatesFromArray } from '../utils/removeDuplicatesFromArray';
 
 const router = express.Router();
 
@@ -10,7 +11,11 @@ router.post('/api/card', isAuthenticated, async (req: Request, res: Response) =>
     // Check if group exists before building the card
     await Group.findById(req.body.groupId);
 
-    const card = Card.build(req.body);
+    // Prevent duplicate tags
+    const tags = req.body.tags || [];
+    const uniqueTags = removeDuplicatesFromArray(tags, 'name');
+
+    const card = Card.build({ ...req.body, tags: uniqueTags });
     await card.save();
     return res.status(201).send(card);
   } catch (err) {
