@@ -1,12 +1,21 @@
 import express, { type Request, type Response } from 'express';
 import { Card } from '../models/card';
+import { Group } from '../models/group';
 import { isAuthenticated } from '../middleware/auth';
+import { removeDuplicatesByKey } from '../utils/removeDuplicatesByKey';
 
 const router = express.Router();
 
 router.post('/api/card', isAuthenticated, async (req: Request, res: Response) => {
   try {
-    const card = Card.build(req.body);
+    // Check if group exists before building the card
+    await Group.findById(req.body.groupId);
+
+    // Prevent duplicate tags
+    const tags = req.body.tags || [];
+    const uniqueTags = removeDuplicatesByKey(tags, 'name');
+
+    const card = Card.build({ ...req.body, tags: uniqueTags });
     await card.save();
     return res.status(201).send(card);
   } catch (err) {
@@ -27,7 +36,11 @@ router.get('/api/card/:id', isAuthenticated, async (req: Request, res: Response)
 
 router.put('/api/card/:id', isAuthenticated, async (req: Request, res: Response) => {
   const { id } = req.params;
-  const body = req.body;
+
+  // Prevent duplicate tags
+  const tags = req.body.tags || [];
+  const uniqueTags = removeDuplicatesByKey(tags, 'name');
+  const body = { ...req.body, tags: uniqueTags };
 
   try {
     const card = await Card.findOneAndUpdate({ _id: id }, body, {

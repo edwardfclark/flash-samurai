@@ -1,6 +1,7 @@
 import { Card, ICard } from '../src/models/card';
 import { Group, IGroup } from '../src/models/group';
 import { IUser } from '../src/models/user';
+import { Tag, ITag } from '../src/models/tag';
 import { connect, clearDatabase, closeDatabase } from './db';
 import { Document } from 'mongoose';
 import { app } from '../src/app';
@@ -21,8 +22,14 @@ const cardArgs: Omit<ICard, 'groupId'> = {
   answer: 'To get to the other side!',
 };
 
+const tagArgs: Omit<ITag, 'groupId'> = {
+  name: 'Test Tag',
+  description: 'This is a test tag',
+};
+
 let card: Document;
 let group: Document;
+let tag: Document;
 let application: Server;
 let authorization: string;
 
@@ -40,6 +47,8 @@ beforeEach(async () => {
 
   group = Group.build(groupArgs);
   await group.save();
+  tag = Tag.build({ ...tagArgs, groupId: group._id });
+  await tag.save();
   card = Card.build({ ...cardArgs, groupId: group._id });
   await card.save();
 });
@@ -93,5 +102,39 @@ describe('/api/card/:id PUT', () => {
       });
     const { status } = res;
     expect(status).toBe(500);
+  });
+  it('allows optional tags to be added to the card', async () => {
+    const { _id: id } = card;
+    const res = await request(application)
+      .put(`/api/card/${id}`)
+      .set('authorization', authorization)
+      .send({
+        ...cardArgs,
+        question: 'Why did the duck cross the road?',
+        answer: 'Because it was stapled to the chicken!',
+        tags: [tag],
+      });
+    const { status } = res;
+    expect(status).toBe(200);
+    const storedCard = await Card.findById(id);
+    expect(storedCard?.tags).toHaveLength(1);
+    expect(storedCard?.tags?.[0].name).toEqual(tagArgs.name);
+    expect(storedCard?.tags?.[0].description).toEqual(tagArgs.description);
+  });
+  it('does not store duplicate tags', async () => {
+    const { _id: id } = card;
+    const res = await request(application)
+      .put(`/api/card/${id}`)
+      .set('authorization', authorization)
+      .send({
+        ...cardArgs,
+        question: 'Why did the duck cross the road?',
+        answer: 'Because it was stapled to the chicken!',
+        tags: [tag, tag, { ...tagArgs, name: 'Test Tag 2' }, tag, tag],
+      });
+    const { status } = res;
+    expect(status).toBe(200);
+    const storedCard = await Card.findById(id);
+    expect(storedCard?.tags).toHaveLength(2);
   });
 });
