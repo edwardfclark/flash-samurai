@@ -1,6 +1,7 @@
 import express, { type Request, type Response } from 'express';
 import { Group, IGroup } from '../models/group';
 import { Card, ICard } from '../models/card';
+import { Tag, ITag } from '../models/tag';
 import { isAuthenticated } from '../middleware/auth';
 
 const router = express.Router();
@@ -89,6 +90,20 @@ router.get(
     }
   }
 );
+
+router.get('/api/group/:id/tags', isAuthenticated, async (req: Request, res: Response) => {
+  const { id } = req.params;
+
+  try {
+    const tags = await Tag.find({ groupId: id }).exec();
+
+    const total = await Tag.countDocuments({ groupId: id });
+
+    return res.status(201).send({ data: tags, total });
+  } catch (err) {
+    return res.status(500).send(err);
+  }
+});
 
 router.get(
   '/api/group',

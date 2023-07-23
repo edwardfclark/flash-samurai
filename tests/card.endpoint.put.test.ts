@@ -7,7 +7,6 @@ import { Document } from 'mongoose';
 import { app } from '../src/app';
 import request from 'supertest';
 import { Server } from 'http';
-import e from 'express';
 
 const userArgs: IUser = {
   username: 'testuser',
