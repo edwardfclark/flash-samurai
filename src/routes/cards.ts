@@ -36,7 +36,11 @@ router.get('/api/card/:id', isAuthenticated, async (req: Request, res: Response)
 
 router.put('/api/card/:id', isAuthenticated, async (req: Request, res: Response) => {
   const { id } = req.params;
-  const body = req.body;
+
+  // Prevent duplicate tags
+  const tags = req.body.tags || [];
+  const uniqueTags = removeDuplicatesByKey(tags, 'name');
+  const body = { ...req.body, tags: uniqueTags };
 
   try {
     const card = await Card.findOneAndUpdate({ _id: id }, body, {
