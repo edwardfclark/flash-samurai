@@ -1,7 +1,7 @@
 import express, { type Request, type Response } from 'express';
 import { Group, IGroup } from '../models/group';
 import { Card, ICard } from '../models/card';
-import { Tag, ITag } from '../models/tag';
+import { Tag } from '../models/tag';
 import { isAuthenticated } from '../middleware/auth';
 
 const router = express.Router();
@@ -51,7 +51,8 @@ router.delete('/api/group/:id', isAuthenticated, async (req: Request, res: Respo
       throw new Error('No ID, could not delete the group!');
     }
     const group = await Group.findOneAndDelete({ _id: id });
-    await Card.deleteMany({ group: id });
+    await Card.deleteMany({ groupId: id });
+    await Tag.deleteMany({ groupId: id });
 
     return res.status(201).send(group);
   } catch (err) {

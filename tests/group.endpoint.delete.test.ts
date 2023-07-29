@@ -1,5 +1,6 @@
 import { Group, IGroup } from '../src/models/group';
 import { Card, ICard } from '../src/models/card';
+import { Tag, ITag } from '../src/models/tag';
 import { IUser } from '../src/models/user';
 import { connect, clearDatabase, closeDatabase } from './db';
 import { Document } from 'mongoose';
@@ -22,8 +23,14 @@ const cardArgs: Omit<ICard, 'groupId'> = {
   answer: 'To get to the other side!',
 };
 
+const tagArgs: Omit<ITag, 'groupId'> = {
+  name: 'Test',
+  description: 'This is a description for the Test tag',
+};
+
 let card: Document;
 let group: Document;
+let tag: Document;
 let application: Server;
 let authorization: string;
 
@@ -43,6 +50,8 @@ beforeEach(async () => {
   await group.save();
   card = Card.build({ ...cardArgs, groupId: group._id });
   await card.save();
+  tag = Tag.build({ ...tagArgs, groupId: group._id });
+  await tag.save();
 });
 
 afterEach(async () => await clearDatabase());
@@ -79,9 +88,19 @@ describe('/api/group/:id DELETE', () => {
     const res = await request(application).delete(`/api/group/${id}`).set('authorization', authorization);
     const { status } = res;
 
-    const fetchedCards = await Card.find({ group: group._id }).exec();
+    const fetchedCards = await Card.find({ groupId: group._id }).exec();
 
     expect(status).toBe(201);
     expect(fetchedCards.length).toBe(0);
+  });
+  it('deletes all tags associated with the group if the group is deleted', async () => {
+    const { _id: id } = group;
+    const res = await request(application).delete(`/api/group/${id}`).set('authorization', authorization);
+    const { status } = res;
+
+    const fetchedTags = await Tag.find({ groupId: group._id }).exec();
+
+    expect(status).toBe(201);
+    expect(fetchedTags.length).toBe(0);
   });
 });
