@@ -16,6 +16,7 @@ describe('Card', () => {
   };
   const groupArgs = {
     name: 'test',
+    owner: 'testuser',
   };
   it('creates a new card if given all valid, required arguments', async () => {
     const group = Group.build(groupArgs);

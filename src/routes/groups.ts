@@ -9,9 +9,14 @@ const router = express.Router();
 
 router.post('/api/group', isAuthenticated, attachUser, async (req: Request, res: Response) => {
   const { name, description } = req.body;
+  const { user } = req;
+
+  if (!user) {
+    return res.status(400).send({ error: 'User not found' });
+  }
 
   try {
-    const group = Group.build({ name, description });
+    const group = Group.build({ name, description, owner: user.username });
     await group.save();
     return res.status(201).send(group);
   } catch (err) {

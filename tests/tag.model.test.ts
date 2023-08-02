@@ -16,6 +16,7 @@ describe('Tag', () => {
   };
   const groupArgs = {
     name: 'test',
+    owner: 'testuser',
   };
 
   it('creates a new tag if given all valid, required arguments', async () => {

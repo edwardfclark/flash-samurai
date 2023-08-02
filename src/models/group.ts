@@ -3,11 +3,13 @@ import mongoose from 'mongoose';
 interface IGroup {
   name: string;
   description?: string;
+  owner: string;
 }
 
 interface GroupDoc extends mongoose.Document {
   name: string;
   description: string;
+  owner: string;
 }
 
 interface groupModelInterface extends mongoose.Model<GroupDoc> {
@@ -23,6 +25,10 @@ const groupSchema = new mongoose.Schema({
   description: {
     type: String,
     required: false,
+  },
+  owner: {
+    type: String,
+    required: true,
   },
 });
 

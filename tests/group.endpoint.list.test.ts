@@ -28,6 +28,7 @@ beforeEach(async () => {
   const group1 = Group.build({
     name: 'group1',
     description: 'group1',
+    owner: userArgs.username,
   });
 
   await group1.save();
@@ -35,6 +36,7 @@ beforeEach(async () => {
   const group2 = Group.build({
     name: 'group2',
     description: 'group2',
+    owner: userArgs.username,
   });
 
   await group2.save();

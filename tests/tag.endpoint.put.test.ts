@@ -15,6 +15,7 @@ const userArgs: IUser = {
 
 const groupArgs: IGroup = {
   name: 'test',
+  owner: userArgs.username,
 };
 
 const cardArgs: Omit<ICard, 'groupId'> = {

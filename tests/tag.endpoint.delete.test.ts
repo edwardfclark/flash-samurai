@@ -16,6 +16,7 @@ const userArgs: IUser = {
 const groupArgs: IGroup = {
   name: 'Test',
   description: 'This is a description for the Test group',
+  owner: userArgs.username,
 };
 
 const cardArgs: Omit<ICard, 'groupId'> = {

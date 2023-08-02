@@ -12,6 +12,7 @@ describe('Card', () => {
   const groupArgs = {
     name: 'Test',
     description: 'This is a test group',
+    owner: 'testuser',
   };
   it('creates a new group if given all valid, required arguments', async () => {
     const group = Group.build(groupArgs);
