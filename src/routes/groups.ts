@@ -3,16 +3,16 @@ import { Group, IGroup } from '../models/group';
 import { Card, ICard } from '../models/card';
 import { Tag } from '../models/tag';
 import { isAuthenticated } from '../middleware/auth';
-import { attachUser } from '../middleware/attachUser';
+import { attachUser, RequestWithUser } from '../middleware/attachUser';
 
 const router = express.Router();
 
-router.post('/api/group', isAuthenticated, attachUser, async (req: Request, res: Response) => {
+router.post('/api/group', isAuthenticated, attachUser, async (req: RequestWithUser, res: Response) => {
   const { name, description } = req.body;
   const { user } = req;
 
   if (!user) {
-    return res.status(400).send({ error: 'User not found' });
+    return res.status(400).send({ error: 'Could not create group because owner (user) was not found' });
   }
 
   try {

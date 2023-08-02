@@ -49,6 +49,7 @@ describe('/api/group POST', () => {
 
     expect(group?.name).toEqual(groupArgs.name);
     expect(group?.description).toEqual(groupArgs.description);
+    expect(group?.owner).toEqual(groupArgs.owner);
   });
   it('returns the newly created document', async () => {
     const res = await request(application).post('/api/group').set('authorization', authorization).send(groupArgs);
@@ -56,6 +57,7 @@ describe('/api/group POST', () => {
 
     expect(body?.name).toEqual(groupArgs.name);
     expect(body?.description).toEqual(groupArgs.description);
+    expect(body?.owner).toEqual(groupArgs.owner);
   });
   it('will not create a group with the same name', async () => {
     await request(application).post('/api/group').set('authorization', authorization).send(groupArgs);

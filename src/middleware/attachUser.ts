@@ -1,10 +1,14 @@
 import jwt from 'jsonwebtoken';
 import { type NextFunction, type Request, type Response } from 'express';
-import { User } from '../models/user';
+import { User, IUser } from '../models/user';
+
+export interface RequestWithUser extends Request {
+  user?: IUser;
+}
 
 const { SECRET = 'secret' } = process.env;
 
-export async function attachUser(req: Request, res: Response, next: NextFunction) {
+export async function attachUser(req: RequestWithUser, res: Response, next: NextFunction) {
   const { authorization = '' } = req.headers;
   const token = authorization.split(' ')[1];
   const payload = (await jwt.verify(token, SECRET)) as unknown as { username?: string };
