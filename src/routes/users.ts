@@ -12,7 +12,7 @@ router.post('/api/signup', async (req: Request, res: Response) => {
 
   // If the user already exists, early return with an error
   const user = await User.findOne({ username });
-  if (!!user) {
+  if (user) {
     return res.status(400).send({ error: 'User already exists' });
   }
 
@@ -36,7 +36,7 @@ router.post('/api/login', async (req: Request, res: Response) => {
     // Check if the user exists
     const user = await User.findOne({ username });
 
-    if (!!user) {
+    if (user) {
       // Check if password matches
       const result = await bcrypt.compare(password, user.password);
       if (result) {

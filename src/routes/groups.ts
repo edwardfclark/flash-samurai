@@ -3,10 +3,11 @@ import { Group, IGroup } from '../models/group';
 import { Card, ICard } from '../models/card';
 import { Tag } from '../models/tag';
 import { isAuthenticated } from '../middleware/auth';
+import { attachUser } from '../middleware/attachUser';
 
 const router = express.Router();
 
-router.post('/api/group', isAuthenticated, async (req: Request, res: Response) => {
+router.post('/api/group', isAuthenticated, attachUser, async (req: Request, res: Response) => {
   const { name, description } = req.body;
 
   try {
