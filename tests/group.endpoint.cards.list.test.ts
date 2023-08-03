@@ -88,14 +88,14 @@ describe('/api/group/:id/cards GET', () => {
     expect(total).toBe(2);
     expect(Boolean(data.find((item: ICard) => item.question === 'question3'))).toBe(false);
   });
-  it('has a default value of 10 for limit, and a default of 1 for page', async () => {
+  it('has a default value of 10 for limit, and a default of 0 for page', async () => {
     const { _id: id } = group;
     const res = await request(application).get(`/api/group/${id}/cards`).set('authorization', authorization);
     const { body } = res;
     const { limit, page } = body;
 
     expect(limit).toBe(10);
-    expect(page).toBe(1);
+    expect(page).toBe(0);
   });
   it('allows you to request a higher limit', async () => {
     const { _id: id } = group;

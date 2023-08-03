@@ -81,12 +81,12 @@ router.get(
     const { id } = req.params;
     const { limit, page } = req.query;
     const parsedLimit = parseInt(limit ?? 10, 10);
-    const parsedPage = parseInt(page ?? 1, 10);
+    const parsedPage = parseInt(page ?? 0, 10);
 
     try {
       const cards = await Card.find({ groupId: id })
         .limit(parsedLimit * 1)
-        .skip((parsedPage - 1) * parsedLimit)
+        .skip(parsedPage * parsedLimit)
         .exec();
 
       const total = await Card.countDocuments({ groupId: id });
@@ -126,12 +126,12 @@ router.get(
   ) => {
     const { limit, page } = req.query;
     const parsedLimit = parseInt(limit ?? 10, 10);
-    const parsedPage = parseInt(page ?? 1, 10);
+    const parsedPage = parseInt(page ?? 0, 10);
 
     try {
       const groups = await Group.find()
         .limit(parsedLimit * 1)
-        .skip((parsedPage - 1) * parsedLimit)
+        .skip(parsedPage * parsedLimit)
         .exec();
 
       const total = await Group.countDocuments();
