@@ -43,7 +43,10 @@ router.put('/api/tag/:id', isAuthenticated, async (req: Request, res: Response) 
     // Find all cards with the tag and update them
     // If this fails, the tag will not be updated
     const existingTag = await Tag.findById(id);
-    await Card.updateMany({ 'tags.name': existingTag?.name }, { $set: { 'tags.$': req.body } });
+    await Card.updateMany(
+      { 'tags.name': existingTag?.name, 'tags.groupId': existingTag?.groupId },
+      { $set: { 'tags.$': req.body } }
+    );
 
     const tag = await Tag.findOneAndUpdate({ _id: id }, req.body, { returnOriginal: false });
     return res.status(200).send(tag);
