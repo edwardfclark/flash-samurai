@@ -62,7 +62,10 @@ router.delete('/api/tag/:id', isAuthenticated, async (req: Request, res: Respons
     // Find all cards with the tag and delete the tag from them
     // If this fails, the tag will not be deleted
     const existingTag = await Tag.findById(id);
-    await Card.updateMany({ 'tags.name': existingTag?.name }, { $pull: { tags: { name: existingTag?.name } } });
+    await Card.updateMany(
+      { 'tags.name': existingTag?.name, 'tags.groupId': existingTag?.groupId },
+      { $pull: { tags: { name: existingTag?.name } } }
+    );
 
     const tag = await Tag.findOneAndDelete({ _id: id });
     return res.status(200).send(tag);
