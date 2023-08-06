@@ -143,4 +143,31 @@ router.get(
   }
 );
 
+router.get(
+  '/api/group/:id/quiz',
+  isAuthenticated,
+  async (
+    req: Request<{ id: string }, { data: ICard; total: number }, unknown, { tagNames?: string[] }>,
+    res: Response
+  ) => {
+    const { tagNames } = req.query;
+
+    let tagsQuery = {};
+
+    if (tagNames?.length) {
+      tagsQuery = { 'tags.name': { $in: tagNames } };
+    }
+
+    try {
+      const total = await Card.countDocuments({ groupId: req.params.id, ...tagsQuery });
+      const randomEntry = Math.floor(Math.random() * total);
+      const randomCard = await Card.findOne({ groupId: req.params.id, ...tagsQuery }).skip(randomEntry);
+
+      return res.status(201).send({ data: randomCard, total });
+    } catch (err) {
+      return res.status(500).send(err);
+    }
+  }
+);
+
 export { router as groupRouter };

@@ -7,7 +7,7 @@ interface ICard {
   reference?: string;
   tags?: {
     name: string;
-    description: string;
+    description?: string;
   }[];
 }
 
