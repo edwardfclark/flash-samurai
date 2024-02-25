@@ -1,10 +1,17 @@
 import mongoose from 'mongoose';
+interface Reference {
+  type: 'text' | 'link' | 'youtube';
+  text?: string;
+  url?: string;
+  videoTimestamp?: number;
+}
 
 interface ICard {
   question: string;
   answer: string;
   groupId: mongoose.ObjectId;
   reference?: string;
+  references?: Reference[];
   tags?: {
     name: string;
     description?: string;
@@ -16,6 +23,7 @@ interface CardDoc extends mongoose.Document {
   answer: string;
   groupId: mongoose.ObjectId;
   reference?: string;
+  references?: Reference[];
   tags?: {
     name: string;
     description: string;
@@ -43,6 +51,14 @@ const cardSchema = new mongoose.Schema({
     type: String,
     required: false,
   },
+  references: [
+    {
+      type: { type: String, required: true },
+      text: { type: String, required: false },
+      url: { type: String, required: false },
+      timestampSeconds: { type: Number, required: false },
+    },
+  ],
   tags: [{ name: String, description: String }],
 });
 
