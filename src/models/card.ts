@@ -1,9 +1,10 @@
 import mongoose from 'mongoose';
+
 interface Reference {
   type: 'text' | 'link' | 'youtube';
   text?: string;
   url?: string;
-  videoTimestamp?: number;
+  timestampSeconds?: string;
 }
 
 interface ICard {
@@ -56,7 +57,7 @@ const cardSchema = new mongoose.Schema({
       type: { type: String, required: true },
       text: { type: String, required: false },
       url: { type: String, required: false },
-      timestampSeconds: { type: Number, required: false },
+      timestampSeconds: { type: String, required: false },
     },
   ],
   tags: [{ name: String, description: String }],
