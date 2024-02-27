@@ -5,6 +5,7 @@ interface Reference {
   text?: string;
   url?: string;
   timestampSeconds?: string;
+  videoID?: string;
 }
 
 interface ICard {
@@ -46,12 +47,12 @@ const cardSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
-
   references: [
     {
       type: { type: String, required: true },
       text: { type: String, required: false },
       url: { type: String, required: false },
+      videoID: { type: String, required: false },
       timestampSeconds: { type: String, required: false },
     },
   ],
