@@ -82,14 +82,14 @@ describe('/api/card POST', () => {
     expect(body.question).toEqual(cardArgs.question);
     expect(body.answer).toEqual(cardArgs.answer);
   });
-  it('can take an optional "reference" key', async () => {
+  it('can take an optional "references" key', async () => {
     const res = await request(application)
       .post('/api/card')
       .set('authorization', authorization)
-      .send({ ...cardArgs, groupId: group?._id, reference: 'interesting reference' });
+      .send({ ...cardArgs, groupId: group?._id, references: [{ type: 'text', text: 'interesting reference' }] });
     const { body } = res;
 
-    expect(body.reference).toEqual('interesting reference');
+    expect(body.references[0].text).toEqual('interesting reference');
   });
   it('does not create records with keys that are not in the model', async () => {
     const res = await request(application)
