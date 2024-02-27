@@ -11,7 +11,6 @@ interface ICard {
   question: string;
   answer: string;
   groupId: mongoose.ObjectId;
-  reference?: string;
   references?: Reference[];
   tags?: {
     name: string;
@@ -23,7 +22,6 @@ interface CardDoc extends mongoose.Document {
   question: string;
   answer: string;
   groupId: mongoose.ObjectId;
-  reference?: string;
   references?: Reference[];
   tags?: {
     name: string;
@@ -48,10 +46,7 @@ const cardSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
-  reference: {
-    type: String,
-    required: false,
-  },
+
   references: [
     {
       type: { type: String, required: true },
