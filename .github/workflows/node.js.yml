@@ -14,14 +14,19 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - uses: actions/checkout@v4
+      - name: Checkout
+        uses: actions/checkout@v4
+
       - name: Use Node.js
         uses: actions/setup-node@v4
         with:
           node-version: '20.x'
+
       - name: Install dependencies
         run: yarn install
-        name: Lint
+
+      - name: Lint
         run: yarn lint
-        name: Test
+
+      - name: Test
         run: yarn test
